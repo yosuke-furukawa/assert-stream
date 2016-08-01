@@ -1,0 +1,27 @@
+{
+  "name": "assert-stream",
+  "version": "1.0.0",
+  "description": "assertStream.expect({ foo: 'bar' }); res.pipe(assertStream);",
+  "main": "index.js",
+  "scripts": {
+    "test": "eater"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yosuke-furukawa/assert-stream.git"
+  },
+  "keywords": [
+    "assert",
+    "stream"
+  ],
+  "author": "yosuke-furukawa",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/yosuke-furukawa/assert-stream/issues"
+  },
+  "homepage": "https://github.com/yosuke-furukawa/assert-stream#readme",
+  "devDependencies": {
+    "eater": "^3.0.0-5",
+    "must-call": "^1.0.0"
+  }
+}
