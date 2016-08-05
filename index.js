@@ -1,3 +1,5 @@
+'use strict';
+
 const Writable = require('stream').Writable;
 
 class AssertStream extends Writable {
