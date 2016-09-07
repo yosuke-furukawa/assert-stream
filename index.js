@@ -8,14 +8,25 @@ class AssertStream extends Writable {
     const assert = (options && options.assert) || require('assert');
     this.result = '';
     this.on('finish', () => {
-      switch (typeof this.expect) {
-        case 'string':
-        case 'number':
-          assert(this.expect === this.result);
-          break;
-        case 'object':
-          assert.deepEqual(this.expect, JSON.parse(this.result));
-          break;
+      try {
+        switch (typeof this.expect) {
+          case 'string':
+          case 'number':
+            break;
+          case 'object':
+            if (this.expect instanceof RegExp) {
+              break;
+            }
+            this.result = JSON.parse(this.result);
+            break;
+        }
+        const result = this.checkRegExp(this.expect, this.result, assert);
+        if (!result) {
+          return;
+        }
+        assert.deepEqual(this.expect, this.result);
+      } catch(e) {
+        this.emit('error', e);
       }
     });
   }
@@ -27,6 +38,15 @@ class AssertStream extends Writable {
   _write(chunk, encoding, callback) {
     this.result += chunk;
     callback();
+  }
+
+  checkRegExp(expect, actual, assert) {
+    if (expect instanceof RegExp) {
+      return assert(expect.test(actual));
+    } else if (typeof expect !== 'object') {
+      return false;
+    }
+    return Object.keys(expect).some((key) => this.checkRegExp(expect[key], actual[key], assert));
   }
 }
 
