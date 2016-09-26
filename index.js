@@ -21,10 +21,6 @@ class AssertStream extends Writable {
             break;
         }
         const result = this.checkRegExp(this.expect, this.result, assert);
-        if (!result) {
-          return;
-        }
-        assert.deepEqual(this.expect, this.result);
       } catch(e) {
         this.emit('error', e);
       }
@@ -43,8 +39,12 @@ class AssertStream extends Writable {
   checkRegExp(expect, actual, assert) {
     if (expect instanceof RegExp) {
       return assert(expect.test(actual));
+    } else if (typeof expect === 'string') {
+      return assert.equal(expect.trim(), actual.trim());
+    } else if (typeof expect === 'number') {
+      return assert.equal(expect, +actual);
     } else if (typeof expect !== 'object') {
-      return false;
+      return assert.equal(expect, actual);
     }
     return Object.keys(expect).some((key) => this.checkRegExp(expect[key], actual[key], assert));
   }
